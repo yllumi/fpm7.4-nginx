@@ -54,12 +54,14 @@ ARG DEBIAN_SECURITY_MIRROR="http://archive.debian.org/debian-security"
 RUN sed -i -E "s#^deb https?://[^ ]+/debian-security#deb ${DEBIAN_SECURITY_MIRROR}#" /etc/apt/sources.list \
     && grep -q "^deb ${DEBIAN_SECURITY_MIRROR} " /etc/apt/sources.list
 
-# Paket sistem: git, SSH client, editor, dan utilitas pendamping.
+# Paket sistem: git, SSH client, editor, downloader, dan utilitas pendamping.
 # WAJIB satu argumen dipisah koma: helper ini hanya membaca "$1", sehingga
 # paket kedua dan seterusnya akan diabaikan bila ditulis sebagai arg berpisah.
 # vim-tiny dipilih daripada vim: hemat ~45 MB karena vim-runtime tak ikut.
+# wget melengkapi curl (sudah ada di base) untuk unduhan rekursif/--mirror dan
+# skrip yang memanggil wget secara langsung.
 RUN docker-php-serversideup-dep-install-debian \
-        "ca-certificates,git,git-lfs,less,nano,openssh-client,rsync,vim-tiny"
+        "ca-certificates,git,git-lfs,less,nano,openssh-client,rsync,vim-tiny,wget"
 
 # vim-tiny hanya mengirim /usr/bin/vim.tiny dan tidak mendaftarkan alternatif
 # "vim", jadi daftarkan manual agar perintah `vim` benar-benar tersedia.
